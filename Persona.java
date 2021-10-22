@@ -1,6 +1,9 @@
-
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package jaumebalmes.personesxml;
-
 import java.io.Serializable;
 
 public class Persona implements Serializable {
@@ -14,6 +17,18 @@ public class Persona implements Serializable {
     //<editor-fold defaultstate="collapsed" desc="Constructors">
     Persona(){
         
+    }
+    
+    Persona(Persona p){
+        this.name = p.getName();
+        this.surname = p.getSurname();
+        this.age = p.getAge();
+        this.phone = p.getPhone();
+    }
+    
+    Persona(String name, int age){
+        this.name = name;
+        this.age = age;
     }
     
     Persona(String name, String surname, int age, int phone){
