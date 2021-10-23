@@ -73,5 +73,9 @@ public class Persona implements Serializable {
     }
 //</editor-fold>
     
+    @Override
+    public String toString() {
+        return "Persona{" + "name=" + name + ", surname=" + surname + ", age=" + age + ", phone=" + phone + '}';
+    }
     
 }
