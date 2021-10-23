@@ -5,12 +5,15 @@
  */
 package jaumebalmes.personesxml;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -29,6 +32,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Text;
 import org.w3c.dom.Attr;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 /**
  *
  * @author claudi & gerard
@@ -37,7 +42,8 @@ public class Main {
     
     static Persona llista[] = new Persona[4];
     static Persona llistaRecuperada[] = new Persona[4];
-    
+    static ArrayList<Persona> llistaFinal = new ArrayList<Persona>();
+	
     public static void main(String[] args) {
         
         creaPersones();
@@ -46,7 +52,7 @@ public class Main {
         
         creaXML();
         
-        
+        llegirXML();
                 
     }
     
@@ -129,5 +135,39 @@ public class Main {
             System.out.println("Error! :c" + e);
         }
     }
-    
+    private static void llegirXML() {
+
+        try (FileInputStream fileName = new FileInputStream("persones.xml")) {
+
+            DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            Document document = builder.parse(fileName);
+
+            document.getDocumentElement().normalize(); //Reorganiza los nodos para que se lean bien
+
+            NodeList nList = document.getElementsByTagName("Persona");
+
+            for (int i = 0; i < nList.getLength(); i++) {
+                Node nNode = nList.item(i);
+
+                if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+                    Element eElement = (Element) nNode;
+
+                    llistaFinal.add(new Persona(
+                            getNodeValue("Nom", eElement),
+                            Integer.parseInt(getNodeValue("Edat", eElement))));
+                }
+                System.out.println(llistaFinal.get(i));
+            }
+
+        } catch (Exception e) {
+            System.out.println("Error de lectura :c" + e);
+        }
+
+    }
+
+    private static String getNodeValue(String nom, Element eElement) {
+        NodeList nodeList = eElement.getElementsByTagName(nom).item(0).getChildNodes();
+        Node node = nodeList.item(0);
+        return node.getNodeValue();
+    }
 }
